@@ -16,6 +16,7 @@ import ProtectedRoute from './CrudMern/component/routes/protectedRoutes';
 import {LoginContext} from './CrudMern/component/LoginContext.js';
 
 import UserContext from './CrudMern/component/LoginContext'
+// import Privateroutes from 'c:/users/maacn/downloads/privateroutes (1)';
 
 function App() {
   // const [isAuth] = useAuth(false)
@@ -31,11 +32,11 @@ function App() {
         <Route exact path={`/edit/:id`} component={EditUser}/>
         <Route exact path='/login' component={StudentLogin}/>
 
-        <ProtectedRoute path="/get" component={AllUser} />
+        {/* <ProtectedRoute path="/get" component={AllUser} /> */}
 
         {/* <Route exact path={`/get/update/:id`} component={EditUser}/> */}
 
-        {/* <Route exact path="/get" component={AllUser} /> */}
+        <Route exact path="/get" component={ProtectedRoute} />
 
         
       </Switch>
