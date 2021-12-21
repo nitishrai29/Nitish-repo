@@ -1,4 +1,4 @@
-import React, {useState,useContext} from "react"
+import React, {useState,useContext,useEffect} from "react"
 import "./login.css"
 import axios from "axios"
 import PassToggle from './passToggle'
@@ -8,6 +8,12 @@ import { useHistory } from 'react-router-dom';
 const StudentLogin = () => {
     const {login,user,setUser} = useContext(LoginContext)
     const history = useHistory();
+
+    // useEffect(()=>{
+    //     if(
+    //         localStorage.getItem('id') ){setIsAuth(true)} else setIsAuth(false)
+    // }   )
+    
     // const[show,setShow]= PassToggle()
 
     // const [ user, setUser] = useState({
@@ -31,6 +37,7 @@ const StudentLogin = () => {
         })    
  }
 
+ 
 //  const toggle=()=>{
         
 //     setShow(!show)

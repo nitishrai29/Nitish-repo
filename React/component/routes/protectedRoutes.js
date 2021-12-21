@@ -1,16 +1,18 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom';
 import  { useContext } from 'react'
-import { LoginContext } from '../../../context/loginContext'
+import { LoginContext } from '../LoginContext'
+import AllUser from '../AllUser';
+import studentLogin from '../studentLogin'
 
-const ProtectedRoute=({auth,component:Component,...rest})=>{
-    return(
-        <Route {...rest} render={(props)=>{
-            if(auth) return <Component {...props}/>
-            if(!auth) return <Redirect to={{path:'/', state:{from:props.location}}}/>
-        }}
-        />
-    )
+const ProtectedRoute=()=>{
+
+    const{isAuth} = useContext(LoginContext)
+    const auth = isAuth
+  
+        
+    return auth ? <AllUser/>:<studentLogin/> ;  
+        
 
 }
 

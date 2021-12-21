@@ -103,6 +103,7 @@ export default function AllUser() {
                                     <Link to={`/edit/${user._id}`} className='btn btn-warning'>Edit </Link>
                                 </td>
                                 
+                                
                             </tr>
                             )
                         })
@@ -111,7 +112,8 @@ export default function AllUser() {
                 </tbody>
             </table>
             <button className='btn btn-primary' style={{marginLeft:"80rem", marginTop:"-1rem"}}  onClick={()=>addStudent()}>Add User</button>
-
+            {/* <button className='btn btn-primary' style={{marginLeft:"60rem", marginTop:"-1rem"}}  onClick={()=>addStudent()}>Logout</button> */}
+            
         </div>
     )
 }
