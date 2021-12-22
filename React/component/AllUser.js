@@ -1,12 +1,15 @@
 import React from 'react'
 import { useState,useEffect } from 'react/cjs/react.development'
-import {useHistory, useParams} from 'react-router-dom'
+import {useParams,useNavigate,useHistory} from 'react-router-dom'
 import { Link } from 'react-router-dom';
+// import Logout from './Logout';
+// import logout from './Logout';
 
 
 export default function AllUser() {
     const[student,setStudent]= useState([])
-    const history = useHistory()
+    let navigate = useNavigate()
+        // const history = useHistory()
     const {id} = useParams()
     
     useEffect(() => {
@@ -42,7 +45,8 @@ export default function AllUser() {
     }
 
     const addStudent=()=>{
-        history.push('/add')
+        // history.push('/add')
+        navigate("/add")
     }
 
     const deletes= async(id)=>{
@@ -112,7 +116,7 @@ export default function AllUser() {
                 </tbody>
             </table>
             <button className='btn btn-primary' style={{marginLeft:"80rem", marginTop:"-1rem"}}  onClick={()=>addStudent()}>Add User</button>
-            {/* <button className='btn btn-primary' style={{marginLeft:"60rem", marginTop:"-1rem"}}  onClick={()=>addStudent()}>Logout</button> */}
+            <button className='btn btn-primary' style={{marginLeft:"60rem", marginTop:"-1rem"}}  onClick={()=>navigate('/logout')}>Logout</button>
             
         </div>
     )

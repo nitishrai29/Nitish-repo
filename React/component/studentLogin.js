@@ -4,15 +4,13 @@ import axios from "axios"
 import PassToggle from './passToggle'
 import {LoginContext} from "./LoginContext"
 
-import { useHistory } from 'react-router-dom';
+import { useHistory,useNavigate } from 'react-router-dom';
 const StudentLogin = () => {
-    const {login,user,setUser} = useContext(LoginContext)
-    const history = useHistory();
+    let navigate=useNavigate()
+    const {user,setUser,setIsAuth,handleChange} = useContext(LoginContext)
+    // const history = useHistory();
+    const{email,password}=user
 
-    // useEffect(()=>{
-    //     if(
-    //         localStorage.getItem('id') ){setIsAuth(true)} else setIsAuth(false)
-    // }   )
     
     // const[show,setShow]= PassToggle()
 
@@ -20,22 +18,30 @@ const StudentLogin = () => {
     //     email:"",
     //     password:""
     // })
-    // const login=()=>{
-    //     axios.post(`/login`,user)
-    //     .then(res=>{alert(res.data.message)
-    //         setUser(res.data.user)
-    //         history.push(`/get`)
-    //     })
+    const login=()=>{
+        axios.post(`/login`,user)
+        .then(res=>{alert(res.data.message)
+            setUser(res.data.user|| { })
+            if(res.data.user){
+            localStorage.setItem('id',JSON.stringify(user._id));
+            setIsAuth(true)
+            navigate('/links')
+            }else{
+                navigate('/home')
+            }
+           
+            
+        })
        
-    // }
+    }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setUser({
-            ...user,
-            [name]: value         
-        })    
- }
+//     const handleChange = (e) => {
+//         const { name, value } = e.target
+//         setUser({
+//             ...user,
+//             [name]: value         
+//         })    
+//  }
 
  
 //  const toggle=()=>{
@@ -56,7 +62,7 @@ console.log(user)
             <PassToggle password={user.password} name="password" onChange={handleChange} style={{marginLeft:"18rem", color:"black",position:"absolute", top:"219px", left:"611px" ,cursor: "pointer"}} styles={{marginLeft:"15px"}}/>
             <div className="button" onClick={()=>login()}>Login</div>
             <div>or</div>
-            <div className="button" onClick={()=>history.push('/add')}>Register</div>
+            <div className="button" onClick={()=>navigate('/add')}>Register</div>
         </div>
     )
 }
