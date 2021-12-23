@@ -4,17 +4,22 @@ import  { useContext } from 'react'
 import { LoginContext } from '../LoginContext'
 import AllUser from '../AllUser';
 import studentLogin from '../studentLogin'
-import { Navigate } from 'react-router-dom';
+import { Navigate,useNavigate } from 'react-router-dom';
 import Home from '../Home'
 
 const ProtectedRoute=({component:Component})=>{
 
     const{isAuth} = useContext(LoginContext)
+    const navigate = useNavigate()
     const auth = isAuth
-  
-        
+    // if(auth){
+    //     if(navigate('/login')){
+    //         <Navigate to={"/links"}/>
+    //     }
+
+    // }      
     return auth ? <Component/>  :<Navigate to="/login"/>  
-   
+
 
 }
 
