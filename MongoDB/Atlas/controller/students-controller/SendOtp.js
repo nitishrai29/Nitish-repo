@@ -19,7 +19,7 @@ const email_send = (req,res)=>{
 
     }
     else{
-         let otpCode = Math.floor((Math.random()*10000) +1);
+         let otpCode = Math.floor((Math.random()*100000) +1);
         let otpData = new  otpSchema({
             _id: new mongoose.Types.ObjectId(),
             email:req.body.email,
@@ -27,7 +27,7 @@ const email_send = (req,res)=>{
             expireIn :new Date().getTime() + 300*10000
         })
         let otpResponse =  otpData.save();
-        // mailer()
+        
         responseType.statusText = " successfullllyyyy"
         responseType.message = " please check your mail id"
 

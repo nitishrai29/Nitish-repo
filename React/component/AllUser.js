@@ -30,11 +30,25 @@ export default function AllUser() {
     const getStudents=async()=>{
 
     //     // const{name,lastName,gender,standard,mobile} = student
-        const res = await fetch('/get')
+        const res = await fetch('/get',{
+            method : "GET",
+            headers:{
+                Accept: "application/json",
+                "content-type":"application/json"
+            },
+
+            credentials:"include"
+        })
 
         const data = await res.json()
         console.log(data)
-        setStudent(data)
+
+        if(!res.status===200){
+            const error= new Error(res.error)
+            throw error
+        }else{
+            setStudent(data)
+        }
     // //    const result=  data.map(item=>{
     // //         return{
     // //             ...item,

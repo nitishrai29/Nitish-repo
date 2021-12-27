@@ -13,15 +13,14 @@ const login = (req, res) => {
         if(user){
             const match = await bcrypt.compare(password,user.password)
 
-            const token = await user.generateAuthToken()
+            const token =  await user.generateAuthToken()
             
-
-            res.cookie("jwtToken", token,{
+             res.cookie("jwtToken", token,{
                 httpOnly:true
             })
     
             if(match){
-            res.send({message:"Login succesfully",user:user})
+            res.send({message:"Login succesfully",user})
         }
         else{
             res.send({message:"password doesnt match"})
@@ -31,7 +30,7 @@ const login = (req, res) => {
     }
         else{
             res.send({message:"user not matched"})
-            res.redirect('/login')
+             res.redirect('/login')
         }
 
     } )

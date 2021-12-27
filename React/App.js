@@ -20,6 +20,9 @@ import UserContext from './CrudMern/component/LoginContext'
 import Logout from './CrudMern/component/Logout';
 import Home from './CrudMern/component/Home';
 import Links from './CrudMern/component/Links';
+import ErrorPage from './CrudMern/component/ErrorPage';
+
+import Player from './CrudMern/component/player';
 // import Privateroutes from 'c:/users/maacn/downloads/privateroutes (1)';
 
 function App() {
@@ -43,8 +46,11 @@ function App() {
         {/* <ProtectedRoute path="/get" component={AllUser} /> */}
 
         {/* <Route exact path={`/get/update/:id`} component={EditUser}/> */}
+        <Route exact path="/video" element={<ProtectedRoute component={Player}/>} />
 
         <Route exact path="/get" element={<ProtectedRoute component={AllUser}/>} />
+        <Route exact path='*' element={<ErrorPage/>}/>
+
 
       </Routes>
       
