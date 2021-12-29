@@ -12,15 +12,16 @@ const login = (req, res) => {
     data.findOne({email:email},async(err,user)=>{
         if(user){
             const match = await bcrypt.compare(password,user.password)
-
+            
             const token =  await user.generateAuthToken()
             
              res.cookie("jwtToken", token,{
                 httpOnly:true
             })
+            console.log('token is:' +token)
     
             if(match){
-            res.send({message:"Login succesfully",user})
+            res.send({message:"Login succesfully",user:user})
         }
         else{
             res.send({message:"password doesnt match"})
@@ -30,7 +31,7 @@ const login = (req, res) => {
     }
         else{
             res.send({message:"user not matched"})
-             res.redirect('/login')
+            //  res.redirect('/login')
         }
 
     } )
