@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import PassToggle from './passToggle'
 
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams,useNavigate } from 'react-router-dom';
 import {
     Form,
     FormGroup,
@@ -15,6 +15,7 @@ import {
 
 
 const EditUser = () => {
+    let navigate=useNavigate()
     const[name,setName] = useState([])
     const[lastName ,setLastName] = useState([])
     const[email,setEmail] = useState([])
@@ -33,8 +34,9 @@ const EditUser = () => {
 
   
     const { id } = useParams();
-    // const classes = useStyles();
-    let history = useHistory();
+    
+    // const history = useHistory();
+    
 
     useEffect(() => {
         loadUserDetails();
@@ -78,8 +80,8 @@ const EditUser = () => {
         console.warn("result is :", result.data);
 
     })
-        
-        history.push('/get')  
+        navigate("/get")
+        // history.push('/get')  
     } 
 
     // const toggle=()=>{

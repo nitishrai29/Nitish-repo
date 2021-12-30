@@ -1,6 +1,6 @@
 var CryptoJS = require('crypto-js')
 
-const Encrypt=(cipher)=>{
+const EncDecTool=(cipher)=>{
 
     var ciphertext = CryptoJS.AES.encrypt(cipher, 'secret key 123').toString();
     console.log('Encrypted Code is:',ciphertext)
@@ -16,7 +16,7 @@ const Encrypt=(cipher)=>{
 //     console.log('our encrypted text is:', encryptedText )
 }
 
-var text = Encrypt('Happy Diwali to you')
+var text = EncDecTool('Happy Diwali to you')
 
 // const Dcrypt=(abc)=>{
 //     var decryptedText= CryptoJS.AES.decrypt(abc,'iamawebdeveloper')

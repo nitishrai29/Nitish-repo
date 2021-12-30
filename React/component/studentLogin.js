@@ -4,35 +4,47 @@ import axios from "axios"
 import PassToggle from './passToggle'
 import {LoginContext} from "./LoginContext"
 
-import { useHistory,useNavigate } from 'react-router-dom';
+import { Navigate, useHistory,useNavigate } from 'react-router-dom';
 const StudentLogin = () => {
     let navigate=useNavigate()
     const {user,setUser,setIsAuth,handleChange} = useContext(LoginContext)
     // const history = useHistory();
     const{email,password}=user
-
     
-    // const[show,setShow]= PassToggle()
+    // useEffect(()=>{
+    //     if(isAuth){
+            
+    //         navigate('/links')
+            
+    //     }else{
+    //         navigate('/login')
+    //     }
+    // },[])
+    //     // const[show,setShow]= PassToggle()
 
     // const [ user, setUser] = useState({
     //     email:"",
     //     password:""
     // })
+
+
+    
     const login=()=>{
         axios.post(`/login`,user)
         .then(res=>{alert(res.data.message)
             setUser(res.data.user|| { })
+            console.log("my loging data:", user)
             if(res.data.user){
-            localStorage.setItem('id',JSON.stringify(user._id));
+            localStorage.setItem('id',JSON.stringify(user));
             setIsAuth(true)
             navigate('/links')
             }else{
-                navigate('/home')
+                navigate('/login')
             }
            
             
         })
-       
+        
     }
 
 //     const handleChange = (e) => {

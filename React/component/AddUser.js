@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import PassToggle from './passToggle'
 
-import { useHistory } from 'react-router-dom';
+import { useHistory,useNavigate } from 'react-router-dom';
 import {
     Form,
     FormGroup,
@@ -16,13 +16,16 @@ import {
 //   
 
 const AddUser = () => {
+
     const [user, setUser] = useState({ name:"", lastName:"", email:"", gender:"", standard:"", mobile:"", password:"", cnfrmPassword:"" });
     // const[show,setShow]= useState(false)
     // const[cnfrmshow,setCnfrmShow]= useState(false)
     
 
     // const [eye,setEye]= useState(false)
-    let history = useHistory();
+    // const history = useHistory();
+    // let navigate= useNavigate()
+    const navigate= useNavigate()
 
     let names, value
     const onValueChange = (e) => {
@@ -37,6 +40,8 @@ const AddUser = () => {
         
         
         const {name,lastName, email,gender,standard, mobile, password, cnfrmPassword} = user
+
+        
         if (name && lastName && gender && email && standard && mobile && password && (password === cnfrmPassword))
     {
 
@@ -55,7 +60,8 @@ const AddUser = () => {
         const data = await res.json();
         console.log(data)
         window.alert('success')
-        history.push('/login')
+        navigate('/login')
+        // history.push('/login')
     }
         else{
             // alert("invalid  student ")

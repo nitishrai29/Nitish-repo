@@ -6,39 +6,53 @@ var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 
-const email_send = (req,res)=>{
+const email_send =async (req,res)=>{
     
     const {email}= req.body
 
-    let data =  studentSchema.findOne({email:email})
+    let data = await studentSchema.findOne({email:email})
+    // .then((result) => {
+    //     res.status(201).json(result);
+    // // console.log(result)
+
+    // })
+    // .catch(error =>{
+    //     console.log(error)
+    // } )
     const responseType = {};
-    if (!data){
-        responseType.statusText = " error present"
-        responseType.message = "  mail id not exists"
-        
-
+    try{
+        if (!data){
+            responseType.statusText = " error present"
+            responseType.message = "  mail id not exists"
+            
+    
+        }
+        else{
+             let otpCode = Math.floor((Math.random()*100000) +1);
+            let otpData = new  otpSchema({
+                _id: new mongoose.Types.ObjectId(),
+                email:req.body.email,
+                code:otpCode,
+                expireIn :new Date().getTime() + 300*10000
+            })
+            let otpResponse =  otpData.save();
+            mailer()
+            responseType.statusText = " successful"
+            responseType.message = " please check your mail id"
+    
+            
+        }
+        res.status(200).json(responseType)
     }
-    else{
-         let otpCode = Math.floor((Math.random()*100000) +1);
-        let otpData = new  otpSchema({
-            _id: new mongoose.Types.ObjectId(),
-            email:req.body.email,
-            code:otpCode,
-            expireIn :new Date().getTime() + 300*10000
-        })
-        let otpResponse =  otpData.save();
-        
-        responseType.statusText = " successfullllyyyy"
-        responseType.message = " please check your mail id"
-
-        
+    catch(err){
+        console.warn(err)
     }
-    res.status(200).json(responseType)
+    
 }
 
-const change_password =  (req,res) =>{
+const change_password = async (req,res) =>{
     
-    let data = otpSchema.find({
+    let data = await otpSchema.find({
         email:req.body.email,
         code:req.body.otpCode
     });
@@ -56,10 +70,10 @@ const change_password =  (req,res) =>{
                 response.statusText = ' error'
             }else
             {
-                let  student = studentSchema.findOne({email:req.body.email})
+                let  student = await studentSchema.findOne({email:req.body.email})
                 student.password = req.body.password;
                 student.save();
-                response.message='password changesmsuccesfully'
+                response.message='password changes succesfully'
                 response.statusText = ' sucess password'
             }
         }
@@ -71,18 +85,6 @@ const change_password =  (req,res) =>{
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 const mailer = (email,otp) => {
     var nodemailer = require('nodemailer');
     var transporter = nodemailer.createTransport({
@@ -90,16 +92,16 @@ const mailer = (email,otp) => {
         port : 587,
         secure : false,
         auth:{
-            user:'bismavibgyorweb@gmail.com',
-            pass:'bismamanzoor1'
+            user:'nitish.vibgyorweb@gmail.com',
+            pass:'nitishrai1'
         }
     });
 
     var mailOptions = {
-        from:'bismavibgyorweb@gmail.com',
-        to:'bismahmanxoor1@gmail.com',
-        subject:'sending email using node js mongo db',
-        text:' thanking you'
+        from:'nitish.vibgyorweb@gmail.com',
+        to:'maacnitishrai@gmail.com',
+        subject:'sending email',
+        text:'  AA gaya otp'
     };
 
     transporter.sendMail(mailOptions, function(error,info){
