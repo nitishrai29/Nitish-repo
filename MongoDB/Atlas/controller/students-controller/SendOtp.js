@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const otpSchemas = require('../../Models/otpModel')
+const Otp = require('../../Models/Otp')
 const studentSchema = require('../../Models/Student')
 var bodyParser = require('body-parser');
 const mongoose = require('mongoose');
@@ -11,14 +11,7 @@ const email_send =async (req,res)=>{
     const {email}= req.body
 
     let data = await studentSchema.findOne({email:email})
-    // .then((result) => {
-    //     res.status(201).json(result);
-    // // console.log(result)
-
-    // })
-    // .catch(error =>{
-    //     console.log(error)
-    // } )
+    
     const responseType = {};
     try{
         if (!data){
@@ -29,14 +22,14 @@ const email_send =async (req,res)=>{
         }
         else{
              let otpCode = Math.floor((Math.random()*100000) +1);
-            let otpData = new  otpSchemas({
+            let otpData = new  Otp({
                 _id: new mongoose.Types.ObjectId(),
                 email:req.body.email,
-                code:otpCode,
-                expireIn :new Date().getTime() + 300*10000
+                otp:otpCode,
+                // expireIn :new Date().getTime() + 300*10000
             })
             let otpResponse =  otpData.save();
-            mailer()
+            mailer(email,otpCode)
             responseType.statusText = " successful"
             responseType.message = " please check your mail id"
     
@@ -50,105 +43,63 @@ const email_send =async (req,res)=>{
     
 }
 
-// const change_password = async (req,res) =>{
-    
-//     let data = await otpSchema.find({
-//         email:req.body.email,
-//         code:req.body.otpCode
-//     });
 
-//     const response = {}
-//     {
-//         if (data)
-//         {
-//             let currentTime = new Date.getTime();
-//             let diff = data.expireIn - currentTime;
-
-//             if (diff<0)
-//             {
-//                 response.message='token expire'
-//                 response.statusText = ' error'
-//             }else
-//             {
-//                 let  student = await studentSchema.findOne({email:req.body.email})
-//                 student.password = req.body.password;
-//                 student.save();
-//                 response.message='password changes succesfully'
-//                 response.statusText = ' sucess password'
-//             }
-//         }
-       
-        
-//     }
-//     res.status(200).json(responseType);
-// }
-
-
-
-
-const change_password=async(req,res)=>{
-    const response = {}
-    const {email,code}=req.body
-    if (!code) {
+const change_password= async (req, res) => {
+    const { otp, email, password } = req.body;
+    if (!otp) {
         return res.status(400).json({ error: "Please fill OTP" });
     }
-    const resetUser = await otpSchemas.findOne({ email: email });
-    if(resetUser){
-        const matchOtp = await otpSchemas.findOne({ code: code });
-        if(matchOtp){
+    else {
+        const resetUser = await Otp.findOne({ email: email });
+        
+        if (resetUser) {
 
-            const logUser = await studentSchema.findOne({ email: email });
-            // let hash = bcrypt.hashSync(req.body.password, saltRounds);
-            // logUser.password = hash;
-            logUser.password = req.body.password;
-            logUser.save();
-            console.log(resetUser)
-            // response.message='password changes succesfully'
-            // response.statusText = ' sucess password'
-            return res.status(202).json({ message: "OTP Matched and Password Updated.." });
-            
+            const matchOtp = await Otp.findOne({ otp: otp, email: email, isExpire: false });
+            if (matchOtp) {
+                const timerOtp = matchOtp.date;
+                const checkEx = new Date() - timerOtp
+                console.log("Time difference", checkEx)
+
+                
+
+                if (matchOtp) {
+                    const logUser = await studentSchema.findOne({ email: email });
+                    
+                    if (checkEx < 1000000) {
+                        logUser.password = req.body.password;
+                        matchOtp.isExpire = true;
+                        matchOtp.save();
+                        logUser.save();
+                        return res.status(202).json({ message: "OTP Matched and Password Updated.." });
+                    }
+                    else {
+                        console.log("OTP Expire")
+                        return res.status(405).json({ message: "OTP Expire...." });
+                    }
+                }
+                else {
+                    console.log("Eroor...");
+                    // if(checkEx > 100000){
+                    //     matchOtp.isExpire = true;
+                    //     matchOtp.save();
+                    // }
+                    return res.status(404).json({ message: "Wrong OTP.." });
+                }
+            }
+            else {
+                return res.status(404).json({ message: "Wrong OTP.." });
+            }
+
         }
-        else{
-            response.message='"Wrong OTP.."'
-            return res.status(202).json({ message: "Wrong OTP.." });
+        else {
+            return res.status(404).json({ error: "User Not Found" });
         }
-    }
-    else{
-        return res.status(404).json({ error: "User Not Found" });
     }
 }
 
-    // const data = await otpSchemas.findOne({
-    //     email:email,
-    //     code:code
-    // }).then((result)=>{
-    //     res.json(result)
-    // })
 
-//     console.log(data)
 
-//     const response = {}
-//     if(data){
-//         let currentTime = new Date().getTime()
-//         let diff= data.expireIn - currentTime
-        
-//         if(diff<0){
-//             response.message='token expire'
-//             response.statusText = ' error'
-//         } else{
-//             console.log('otp match', data.code)
-            
-//             let  student = await studentSchema.findOne({email:req.body.email})
-
-//             student.password = req.body.password;
-//             await student.save();
-//             response.message='password changes succesfully'
-//             response.statusText = ' sucess password'
-            
-//         }
-//     }else{
-//         console.log('something went wrong')
-//     }
+// nodeMailer
 
 
 const mailer = (email,otp) => {
@@ -167,7 +118,7 @@ const mailer = (email,otp) => {
         from:'nitish.vibgyorweb@gmail.com',
         to:'maacnitishrai@gmail.com',
         subject:'sending email',
-        text:'  AA gaya otp'
+        text:`${otp}`
     };
 
     transporter.sendMail(mailOptions, function(error,info){

@@ -21,8 +21,10 @@ import Logout from './CrudMern/component/Logout';
 import Home from './CrudMern/component/Home';
 import Links from './CrudMern/component/Links';
 import ErrorPage from './CrudMern/component/ErrorPage';
+import FormForOtp from './CrudMern/component/FormForOtp'
 
 import Player from './CrudMern/component/player';
+import PassChange from './CrudMern/component/PassChange';
 // import Privateroutes from 'c:/users/maacn/downloads/privateroutes (1)';
 
 function App() {
@@ -50,6 +52,10 @@ function App() {
 
         <Route exact path="/get" element={<ProtectedRoute component={AllUser}/>} />
         <Route exact path='*' element={<ErrorPage/>}/>
+        <Route exact path='/OtpPage' element={<PassChange/>}/>
+        {/* <Route exact path='/OtpPage' element={<FormForOtp/>}/> */}
+
+
 
 
       </Routes>
